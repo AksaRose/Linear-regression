@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Regression Learning Tool</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.15.0/dist/tf.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Linear Regression Learning Tool</h1>
+        <p class="subtitle">Enter data points in the table below, then adjust the line to minimize the loss!</p>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label for="slope">Slope (m): <span id="slope-value">0.0</span></label>
+                <input type="range" id="slope" min="-5" max="5" step="0.1" value="0">
+            </div>
+            <div class="control-group">
+                <label for="intercept">Intercept (b): <span id="intercept-value">0.0</span></label>
+                <input type="range" id="intercept" min="-10" max="10" step="0.1" value="0">
+            </div>
+            <button id="reset-btn" class="reset-btn">Reset All</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-label">Mean Squared Error (MSE):</span>
+                <span class="stat-value" id="mse">0.00</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Sum of Squared Errors (SSE):</span>
+                <span class="stat-value" id="sse">0.00</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Equation:</span>
+                <span class="stat-value" id="equation">y = 0.0x + 0.0</span>
+            </div>
+        </div>
+
+        <div class="graph-table-container">
+            <div class="canvas-container">
+                <canvas id="graph"></canvas>
+            </div>
+            <div class="sidebar">
+                <div class="table-section">
+                    <div class="table-headers">
+                        <div class="header-input-group">
+                            <label for="x-header">X:</label>
+                            <input type="text" id="x-header" value="X" placeholder="X header">
+                        </div>
+                        <div class="header-input-group">
+                            <label for="y-header">Y:</label>
+                            <input type="text" id="y-header" value="Y" placeholder="Y header">
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table id="data-table">
+                            <thead>
+                                <tr>
+                                    <th id="x-header-display">X</th>
+                                    <th id="y-header-display">Y</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                                <tr>
+                                    <td><input type="number" class="x-input" step="any" placeholder="x"></td>
+                                    <td><input type="number" class="y-input" step="any" placeholder="y"></td>
+                                    <td><button class="delete-btn" onclick="deleteRow(this)">Del</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button id="add-row-btn" class="add-row-btn">+ Add</button>
+                    </div>
+                </div>
+
+                <div class="training-section">
+                    <h3>Train Model</h3>
+                    <div class="training-controls">
+                        <div class="epoch-control">
+                            <label for="epochs">Epochs:</label>
+                            <input type="number" id="epochs" min="1" max="1000" value="100" step="10">
+                        </div>
+                        <div class="learning-rate-control">
+                            <label for="learning-rate">Learning Rate:</label>
+                            <input type="number" id="learning-rate" min="0.001" max="1" value="0.01" step="0.001">
+                        </div>
+                        <button id="train-btn" class="train-btn">Train Model</button>
+                        <button id="stop-btn" class="stop-btn" style="display: none;">Stop Training</button>
+                    </div>
+                    <div class="code-section">
+                        <label for="code-editor">TensorFlow.js Code:</label>
+                        <textarea id="code-editor" rows="12" readonly>// Model definition
+const model = tf.sequential({
+    layers: [tf.layers.dense({inputShape: [1], units: 1})]
+});
+
+// Compile model
+model.compile({
+    optimizer: tf.train.sgd(learningRate),
+    loss: 'meanSquaredError'
+});
+
+// Training data
+const xs = tf.tensor2d(xData, [xData.length, 1]);
+const ys = tf.tensor2d(yData, [yData.length, 1]);
+
+// Train model
+await model.fit(xs, ys, {
+    epochs: epochs,
+    callbacks: {
+        onEpochEnd: (epoch, logs) => {
+            // Update line in real-time
+            const weights = model.getWeights();
+            const m = weights[0].dataSync()[0];
+            const b = weights[1].dataSync()[0];
+            updateLine(m, b);
+        }
+    }
+});
+
+// Get final weights
+const weights = model.getWeights();
+const m = weights[0].dataSync()[0];
+const b = weights[1].dataSync()[0];</textarea>
+                    </div>
+                    <div class="training-status" id="training-status"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info">
+            <h3>How it works:</h3>
+            <ul>
+                <li><strong>Add points:</strong> Enter x and y values in the table above</li>
+                <li><strong>Customize headers:</strong> Change the column headers to match your data</li>
+                <li><strong>Adjust line manually:</strong> Use the sliders to change the slope and intercept</li>
+                <li><strong>Train model:</strong> Click "Train Model" to use TensorFlow.js to automatically find the best line</li>
+                <li><strong>Real-time training:</strong> Watch the line update in real-time as the model trains!</li>
+                <li><strong>Minimize loss:</strong> Try to make the MSE and SSE as small as possible!</li>
+                <li><strong>Distance lines:</strong> The red lines show the distance from each point to the line</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
