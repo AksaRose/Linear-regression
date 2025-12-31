@@ -54,7 +54,7 @@ function graphToCanvas(graphX, graphY) {
 
 // Draw grid
 function drawGrid() {
-    ctx.strokeStyle = '#e0e0e0';
+    ctx.strokeStyle = 'hsl(214.3 31.8% 91.4%)';
     ctx.lineWidth = 1;
     
     // Vertical lines
@@ -76,7 +76,7 @@ function drawGrid() {
     }
     
     // Axes
-    ctx.strokeStyle = '#333';
+    ctx.strokeStyle = 'hsl(222.2 84% 4.9%)';
     ctx.lineWidth = 2;
     
     // X-axis
@@ -92,8 +92,8 @@ function drawGrid() {
     ctx.stroke();
     
     // Axis labels
-    ctx.fillStyle = '#666';
-    ctx.font = '12px sans-serif';
+    ctx.fillStyle = 'hsl(215.4 16.3% 46.9%)';
+    ctx.font = '12px Inter, sans-serif';
     ctx.textAlign = 'center';
     
     // X-axis labels
@@ -125,8 +125,8 @@ function drawLine() {
     const end = graphToCanvas(x2, y2);
     
     // Draw the line
-    ctx.strokeStyle = '#667eea';
-    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'hsl(222.2 47.4% 11.2%)';
+    ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(start.x, start.y);
     ctx.lineTo(end.x, end.y);
@@ -137,7 +137,7 @@ function drawLine() {
 function drawDistances() {
     if (points.length === 0) return;
     
-    ctx.strokeStyle = '#ff6b6b';
+    ctx.strokeStyle = 'hsl(0 84.2% 60.2%)';
     ctx.lineWidth = 1;
     ctx.setLineDash([5, 5]);
     
@@ -187,13 +187,13 @@ function drawPoints() {
         const pos = graphToCanvas(point.x, point.y);
         
         // Draw point
-        ctx.fillStyle = '#667eea';
+        ctx.fillStyle = 'hsl(222.2 47.4% 11.2%)';
         ctx.beginPath();
-        ctx.arc(pos.x, pos.y, 6, 0, 2 * Math.PI);
+        ctx.arc(pos.x, pos.y, 5, 0, 2 * Math.PI);
         ctx.fill();
         
         // Draw border
-        ctx.strokeStyle = 'white';
+        ctx.strokeStyle = 'hsl(0 0% 100%)';
         ctx.lineWidth = 2;
         ctx.stroke();
     });
